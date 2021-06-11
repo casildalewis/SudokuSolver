@@ -1,4 +1,33 @@
 
+def solve_board (board):
+    pos = find_empty_pos(board)
+
+    if not pos:
+        return True
+
+    (row, col) = pos
+
+    for num in range(1, 10):
+        if validate_board(board, pos, num):
+            board[row][col] = num
+
+            if solve_board(board):
+                return True
+
+            if num == 9:
+                board[row][col] == 0
+
+def validate_board(board, pos, num):
+    print()
+
+def find_empty_pos (board):
+    for i in range(len(board)):
+        for j in range(len(board[i])):
+            if (board[i][j] == 0):
+                return (i, j)
+
+    return None
+
 def print_board(board):
     print("    A  B  C   D  E  F   G  H  I")
     for i in range(len(board)):

@@ -25,11 +25,9 @@ def solve_board (board):
         if validate_pos(board, pos, num):
             # enter it and solve recursively.
             board[row][col] = num
-            # print_board(board)
             if solve_board(board):
                 return True
 
-            # print(" Unsolved. Will change (" + str(row) + ", " + str(col) + ") from " + str(num) + " to 0")
             # If board is unsolved at given num, return to zero to backtrack
             board[row][col] = 0
 
@@ -54,20 +52,17 @@ def validate_pos(board, pos, num):
     # Verify column rule
     for i in range(0, 9):
         if board[i][col] == num:
-            # print("Col False: num=" + str(num) + " pos=" + str(pos) + " in (" + str(i) + ", " + str(col) + ")")
             return False
 
     # Verify row rule
     for j in range(0, 9):
         if board[row][j] == num:
-            # print("row False: num=" + str(num) + "pos=" + str(pos) + " in (" + str(row) + ", " + str(j) + ")")            
             return False
 
     # Verify box rule
     for i in range(row - row%3, row+3 - row%3):
         for j in range(col - col%3, col+3 - col%3):
             if board[i][j] == num:
-                # print("box False: num=" + str(num) + "pos=" + str(pos) + " in (" + str(i) + ", " + str(j) + ")")
                 return False
 
     return True
@@ -116,7 +111,7 @@ def print_board(board):
 
     print("  -------------------------------")
 
-board1 = [
+sample = [
     [5,3,0,0,7,0,0,0,0],
     [6,0,0,1,9,5,0,0,0],
     [0,9,8,0,0,0,0,6,0],
@@ -130,9 +125,9 @@ board1 = [
 
 if __name__ == "__main__":
     print("\nBoard to solve:")
-    print_board(board1)
-    if solve_board(board1):
+    print_board(sample)
+    if solve_board(sample):
         print("\nAnswer:")
-        print_board(board1)
+        print_board(sample)
     else:
         print("unsolved")

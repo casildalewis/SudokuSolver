@@ -16,7 +16,7 @@ def solve_board (board):
     # If not found, board is solved
     if not pos:
         return True
-
+    
     (row, col) = pos
 
     # Enter numbers from 1-9 in empty position until valid number is found
@@ -25,15 +25,15 @@ def solve_board (board):
         if validate_pos(board, pos, num):
             # enter it and solve recursively.
             board[row][col] = num
+            # print_board(board)
             if solve_board(board):
                 return True
 
-            # If board is unsolved at 9, return to zero to backtrack
-            if num == 9:
-                board[row][col] == 0
+            # print(" Unsolved. Will change (" + str(row) + ", " + str(col) + ") from " + str(num) + " to 0")
+            # If board is unsolved at given num, return to zero to backtrack
+            board[row][col] = 0
 
     # Board is unsolved.
-    print_board(board)
     return False
 
 def validate_pos(board, pos, num):
@@ -53,34 +53,21 @@ def validate_pos(board, pos, num):
 
     # Verify column rule
     for i in range(0, 9):
-        if board[i][col] == num and i!=row:
+        if board[i][col] == num:
+            # print("Col False: num=" + str(num) + " pos=" + str(pos) + " in (" + str(i) + ", " + str(col) + ")")
             return False
 
     # Verify row rule
     for j in range(0, 9):
-        if board[row][j] == num and j!=col:
+        if board[row][j] == num:
+            # print("row False: num=" + str(num) + "pos=" + str(pos) + " in (" + str(row) + ", " + str(j) + ")")            
             return False
 
     # Verify box rule
-    # TODO make this better
-
-    if row%3 == 0:
-        box_row = [row, row+1, row+2]
-    elif row%3 == 1:
-        box_row = [row-1, row, row+1]
-    elif row%3 == 2:
-        box_row = [row-2, row-1, row]
-
-    if col%3 == 0:
-        box_col = [col, col+1, col+2]
-    elif col%3 == 1:
-        box_col = [col-1, col, col+1]
-    elif col%3 == 2:
-        box_col = [col-2, col-1, col]
-
-    for i in box_row:
-        for j in box_col:
-            if board[i][j] == num and (i!= row or j!=col):
+    for i in range(row - row%3, row+3 - row%3):
+        for j in range(col - col%3, col+3 - col%3):
+            if board[i][j] == num:
+                # print("box False: num=" + str(num) + "pos=" + str(pos) + " in (" + str(i) + ", " + str(j) + ")")
                 return False
 
     return True
@@ -142,8 +129,10 @@ board1 = [
 ]
 
 if __name__ == "__main__":
+    print("\nBoard to solve:")
     print_board(board1)
     if solve_board(board1):
+        print("\nAnswer:")
         print_board(board1)
     else:
         print("unsolved")

@@ -1,4 +1,4 @@
-
+import time
 def solve_board (board):
     """
     Given a solvable state of the board, represented as a 2D list of integers with a 0 in the 
@@ -126,8 +126,15 @@ sample = [
 if __name__ == "__main__":
     print("\nBoard to solve:")
     print_board(sample)
+
+    before = time.perf_counter()
+
     if solve_board(sample):
         print("\nAnswer:")
         print_board(sample)
     else:
         print("unsolved")
+    
+    after = time.perf_counter()
+    print("\nProgram took {:0.4f} seconds to solve\n".format(after - before))
+

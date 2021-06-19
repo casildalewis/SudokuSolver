@@ -50,12 +50,12 @@ def validate_pos(board, pos, num):
     (row, col) = pos
 
     # Verify column rule
-    for i in range(0, 9):
+    for i in range(9):
         if board[i][col] == num:
             return False
 
     # Verify row rule
-    for j in range(0, 9):
+    for j in range(9):
         if board[row][j] == num:
             return False
 

@@ -19,7 +19,7 @@ sample = [
 # colours
 WHITE = (255, 255, 255)
 LIGHT_BROWN = (224, 190, 151)
-LIGHT_BLUE = (200, 255, 255)
+GREEN = (0, 116, 2)
 BLACK = (0, 0, 0)
 GREY = (89, 89, 89)
 
@@ -35,10 +35,10 @@ pygame.display.set_caption('Sudoku Solver')
 curr_x = 0
 curr_y = 0
 
-# to divide screen into 9x9 grid
+# divide screen into 9x9 grid
 DIV = 540/9
 
-def get_block(pos):
+def get_cell(pos):
     global curr_x
     curr_x = pos[0]//DIV
 
@@ -54,20 +54,27 @@ def draw_lines():
             thickness = 3
         else:
             thickness = 1
-        pygame.draw.line(screen, (0, 0, 0), (0, i * DIV), (540, i * DIV), thickness)
-        pygame.draw.line(screen, (0, 0, 0), (i * DIV, 0), (i * DIV, 540), thickness)   
+        pygame.draw.line(screen, BLACK, (0, i * DIV), (540, i * DIV), thickness)
+        pygame.draw.line(screen, BLACK, (i * DIV, 0), (i * DIV, 540), thickness)   
 
 def display_sudoku(sudoku):
     for i in range (9):
         for j in range (9):
             if sudoku[i][j]!= 0:
  
-                # Fill grey color in default numbered blocks
-                pygame.draw.rect(screen, GREY, (i * DIV, j * DIV, DIV+1, DIV+1))
+                # Fill grey color in default numbered cells
+                pygame.draw.rect(screen, GREY, (i*DIV, j*DIV, DIV+1, DIV+1))
  
                 # Fill default numbers
                 text1 = font.render(str(sudoku[i][j]), 1, LIGHT_BROWN)
-                screen.blit(text1, (i * DIV + 25, j * DIV + 22))
+                screen.blit(text1, ((i*DIV)+25, (j*DIV)+22))
+
+def highlight_cell():
+    for i in range(2):
+        pygame.draw.line(screen, GREEN, (curr_x*DIV, (curr_y+i)*DIV), ((curr_x*DIV)+DIV, (curr_y+i)*DIV), 3)
+        pygame.draw.line(screen, GREEN, ((curr_x+i)*DIV, curr_y*DIV), ((curr_x+i)*DIV, (curr_y*DIV)+DIV), 3)  
+
+flag1 = False
 
 # game loop
 quitting = False
@@ -85,8 +92,12 @@ while not quitting:
         
         # find where the mouse is
         if event.type == pygame.MOUSEBUTTONDOWN:
-            print(get_block(pygame.mouse.get_pos()))
+            print(get_cell(pygame.mouse.get_pos()))
+            flag1 = True
+            pygame.display.update()
 
+    if(flag1):
+        highlight_cell()
     pygame.display.update()
 
 pygame.quit()

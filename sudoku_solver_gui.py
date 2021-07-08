@@ -26,11 +26,6 @@ GREY = (89, 89, 89)
 # fonts
 font = pygame.font.SysFont(None, 32)
 
-# create game screen
-SCREEN_SIZE = (541, 541)
-screen = pygame.display.set_mode(SCREEN_SIZE)
-pygame.display.set_caption('Sudoku Solver')
-
 # current block
 curr_x = 0
 curr_y = 0
@@ -38,7 +33,20 @@ curr_y = 0
 # divide screen into 9x9 grid
 DIV = 540/9
 
+# create game screen
+SCREEN_SIZE = (541, 600)
+screen = pygame.display.set_mode(SCREEN_SIZE)
+pygame.display.set_caption('Sudoku Solver')
+
 def get_cell(pos):
+    """
+    Finds current cell from mouse position.
+
+    Args:
+        pos (tuple): current position of user's mouse.
+
+    returns: current cell position of user's mouse
+    """
     global curr_x
     curr_x = pos[0]//DIV
 
@@ -48,7 +56,9 @@ def get_cell(pos):
     return (curr_x, curr_y)
 
 def draw_lines():
-    # Draw lines to form grid          
+    """
+    Draw lines to form grid.
+    """
     for i in range(10):
         if i % 3 == 0 :
             thickness = 3
@@ -57,31 +67,50 @@ def draw_lines():
         pygame.draw.line(screen, BLACK, (0, i * DIV), (540, i * DIV), thickness)
         pygame.draw.line(screen, BLACK, (i * DIV, 0), (i * DIV, 540), thickness)   
 
-def display_sudoku(sudoku):
+def display_default(sudoku):
+    """
+    Displays default sudoku numbers.
+
+    Args:
+        sudoku (list of lists): first state of the game.
+    """
     for i in range (9):
         for j in range (9):
+
             if sudoku[i][j]!= 0:
- 
                 # Fill grey color in default numbered cells
                 pygame.draw.rect(screen, GREY, (i*DIV, j*DIV, DIV+1, DIV+1))
- 
                 # Fill default numbers
-                text1 = font.render(str(sudoku[i][j]), 1, LIGHT_BROWN)
-                screen.blit(text1, ((i*DIV)+25, (j*DIV)+22))
+                fill_number(str(sudoku[i][j]), LIGHT_BROWN, i, j)
+                
+def fill_number(value, color, i = curr_x, j = curr_y):
+    """
+    Fills number into correct position.
+
+    Args:
+        value (int): number to be filled.
+        color (tuple): color of text
+        i, j (ints): position of number in the grid. Defaults to current mouse position.
+
+    returns: current cell position of user's mouse
+    """
+    text = font.render(value, 1, color)
+    screen.blit(text, ((i*DIV)+25, (j*DIV)+22))
 
 def highlight_cell():
+    """
+    Highlight current cell.
+    """
     for i in range(2):
         pygame.draw.line(screen, GREEN, (curr_x*DIV, (curr_y+i)*DIV), ((curr_x*DIV)+DIV, (curr_y+i)*DIV), 3)
         pygame.draw.line(screen, GREEN, ((curr_x+i)*DIV, curr_y*DIV), ((curr_x+i)*DIV, (curr_y*DIV)+DIV), 3)  
-
-flag1 = False
 
 # game loop
 quitting = False
 while not quitting:
 
     screen.fill(LIGHT_BROWN)
-    display_sudoku(sample)
+    display_default(grid)
     draw_lines()
 
     for event in pygame.event.get():
@@ -93,11 +122,19 @@ while not quitting:
         # find where the mouse is
         if event.type == pygame.MOUSEBUTTONDOWN:
             print(get_cell(pygame.mouse.get_pos()))
-            flag1 = True
-            pygame.display.update()
 
-    if(flag1):
-        highlight_cell()
+        # change current position according to arrow keys   
+        if event.type == pygame.KEYDOWN:
+            if event.key == pygame.K_LEFT:
+                curr_x-= 1
+            if event.key == pygame.K_RIGHT:
+                curr_x+= 1
+            if event.key == pygame.K_UP:
+                curr_y-= 1
+            if event.key == pygame.K_DOWN:
+                curr_y+= 1
+
+    highlight_cell()
     pygame.display.update()
 
 pygame.quit()
